@@ -1,4 +1,4 @@
-# VE450 Capstone Design Project: 5G-Networked-Drone (FA2020)
+# VE450 Capstone Design Project: 5G-Networked-Drone
 We are Group 10 from University of Michigan-Shanghai Jiao Tong University Joint Institute VE450 Capstone Design. Our group members are Yanjun Chen, Yifeng Kuai, Ye Wei, Xiangyu Shi and Yichi Zhang.
 
 ## Useful Links:
