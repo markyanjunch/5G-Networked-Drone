@@ -15,4 +15,8 @@ https://www.skypixel.com/videos/manifold
 + 妙算manifold制作和恢复镜像:  
 https://www.skypixel.com/videos/mp4-c2d0b736-7f89-4460-974d-bf99bcdf45ae  
 + SDK互联互通  
-https://developer.dji.com/cn/document/e37514a6-5803-4abf-a5b6-6da844bd56f6
+https://developer.dji.com/cn/document/e37514a6-5803-4abf-a5b6-6da844bd56f6  
++ linux网络编程
+https://www.bilibili.com/video/BV1iJ411S7UA?p=15  
++ Java网络编程
+https://www.liaoxuefeng.com/wiki/1252599548343744/1305207629676577
