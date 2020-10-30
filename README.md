@@ -26,4 +26,6 @@ https://www.cnblogs.com/Evsward/p/socket.html
 + Android网络编程（TCP/UDP编程，电脑端使用Eclipse创建java文件，手机端使用AS创建Java文件）  
 https://www.jianshu.com/p/fb4dfab4eec1  
 + Android和linux间的通信  
-https://blog.csdn.net/sh21_/article/details/54429788?utm_medium=distribute.pc_relevant_bbs_down.none-task-blog-baidujs-1.nonecase&depth_1-utm_source=distribute.pc_relevant_bbs_down.none-task-blog-baidujs-1.nonecase
+https://blog.csdn.net/sh21_/article/details/54429788?utm_medium=distribute.pc_relevant_bbs_down.none-task-blog-baidujs-1.nonecase&depth_1-utm_source=distribute.pc_relevant_bbs_down.none-task-blog-baidujs-1.nonecase  
++ 花生壳盒子  
+http://service.oray.com/question/4287.html
