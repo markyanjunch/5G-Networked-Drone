@@ -5,8 +5,7 @@ We are Group 10 from the University of Michigan-Shanghai Jiao Tong University Jo
 + 经纬M600 Pro教学:  
 https://www.bilibili.com/video/BV12x411u7D6  
 + Linux环境下搭建大疆Onboard SDK开发环境并运行M600 Pro飞行控制例子:  
-https://blog.csdn.net/qq_33061485/article/details/90439965
-
+https://blog.csdn.net/qq_33061485/article/details/90439965  
 https://blog.csdn.net/qq_33061485/article/details/90604148
 + 华为巴龙MH5000-31 5G工业/商业模组Ubuntu/Linux端连接测试:  
 https://blog.csdn.net/u011501321/article/details/106397334  
