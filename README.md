@@ -21,4 +21,6 @@ https://www.bilibili.com/video/BV1iJ411S7UA?p=15
 + Java网络编程  
 https://www.liaoxuefeng.com/wiki/1252599548343744/1305207629676577  
 + Socket介绍  
-https://www.cnblogs.com/Evsward/p/socket.html
+https://www.cnblogs.com/Evsward/p/socket.html  
++ Android网络编程
+https://www.jianshu.com/p/fb4dfab4eec1
