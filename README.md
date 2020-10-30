@@ -18,9 +18,9 @@ https://www.skypixel.com/videos/mp4-c2d0b736-7f89-4460-974d-bf99bcdf45ae
 https://developer.dji.com/cn/document/e37514a6-5803-4abf-a5b6-6da844bd56f6  
 + linux网络编程  
 https://www.bilibili.com/video/BV1iJ411S7UA?p=15  
-+ Java网络编程  
++ Java网络编程（TCP/UDP编程）  
 https://www.liaoxuefeng.com/wiki/1252599548343744/1305207629676577  
 + Socket介绍  
 https://www.cnblogs.com/Evsward/p/socket.html  
-+ Android网络编程（电脑端使用Eclipse创建java文件，手机端使用AS创建Java文件）  
++ Android网络编程（TCP/UDP编程，电脑端使用Eclipse创建java文件，手机端使用AS创建Java文件）  
 https://www.jianshu.com/p/fb4dfab4eec1
