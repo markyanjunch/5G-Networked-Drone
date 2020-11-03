@@ -28,4 +28,6 @@ https://www.jianshu.com/p/fb4dfab4eec1
 + Android和linux间的通信  
 https://blog.csdn.net/sh21_/article/details/54429788?utm_medium=distribute.pc_relevant_bbs_down.none-task-blog-baidujs-1.nonecase&depth_1-utm_source=distribute.pc_relevant_bbs_down.none-task-blog-baidujs-1.nonecase  
 + 花生壳盒子  
-http://service.oray.com/question/4287.html
+http://service.oray.com/question/4287.html  
++ uart1端口号以及妙算2开发案例
+https://blog.csdn.net/weixin_43783697/article/details/103464972
