@@ -32,4 +32,6 @@ http://service.oray.com/question/4287.html
 + uart1端口号以及妙算2开发案例  
 https://blog.csdn.net/weixin_43783697/article/details/103464972  
 + 错误合集  
-https://blog.csdn.net/dq_lab/article/details/102642733
+https://blog.csdn.net/dq_lab/article/details/102642733  
++ OSDK脚本设计  
+https://blog.csdn.net/qq_43096525/article/details/87783779
