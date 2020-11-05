@@ -34,4 +34,6 @@ https://blog.csdn.net/weixin_43783697/article/details/103464972
 + 错误合集  
 https://blog.csdn.net/dq_lab/article/details/102642733  
 + OSDK脚本设计  
-https://blog.csdn.net/qq_43096525/article/details/87783779
+https://blog.csdn.net/qq_43096525/article/details/87783779  
+https://blog.csdn.net/qq_41628231/article/details/81367109  
+https://blog.csdn.net/banzhuan133/article/details/81457190
