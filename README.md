@@ -43,6 +43,7 @@ https://www.cnblogs.com/sxkgeek/p/9140180.html
 https://github.com/pannzh/P2P-Over-MiddleBoxes-Demo  
 + ！！跨网段socket编程（重要）  
 https://blog.csdn.net/weixin_44917390/article/details/106685219?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~sobaiduend~default-1-106685219.nonecase&utm_term=%E4%B8%8D%E5%90%8C%E7%BD%91%E6%AE%B5socket%E9%80%9A%E4%BF%A1&spm=1000.2123.3001.4430  
-https://blog.csdn.net/m0_46445041/article/details/109387129  
+https://blog.csdn.net/m0_46445041/article/details/109387129    
+http://www.hztdst.com/1237.html
 + 端口冲突解决方法  
 https://www.cnblogs.com/ezhar/p/13461839.html
