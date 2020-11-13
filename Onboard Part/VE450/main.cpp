@@ -19,6 +19,7 @@ int main(int argc, char** argv) {
   char command[101];
   socklen_t len;
   int n;
+  int reuse=1;
 
   // Initialize onboard variables
   int functionTimeout = 1;
@@ -61,7 +62,10 @@ int main(int argc, char** argv) {
   serv_addr.sin_port=htons(EHCO_PORT);    //设置端口号
   serv_addr.sin_addr.s_addr=htons(INADDR_ANY);    //设置服务器IP地址
   bzero(&(serv_addr.sin_zero),8);
-
+  
+  //允许端口复用
+  setsockopt(sock_fd,SOL_SOCKET,SO_REUSEADDR,&reuse,sizeof(reuse));
+  
   //绑定端口
   if(bind(sock_fd,(struct sockaddr*)&serv_addr,sizeof(serv_addr))!=0)
   {
