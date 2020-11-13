@@ -37,12 +37,11 @@ int main(int argc, char** argv) {
   vehicle->obtainCtrlAuthority(functionTimeout);
   
   // get gps information
-  while(1){
   Telemetry::GPSInfo gpsData;
   gpsData = vehicle->broadcast->getGPSInfo();
   std::cout << "latitude=" << gpsData.latitude << std::endl;
   std::cout << "longtitude=" << gpsData.longitude << std::endl;
-  }
+  
   // open server
   // 创建socket连接
   sock_fd=socket(AF_INET,SOCK_STREAM,0);
@@ -97,8 +96,9 @@ int main(int argc, char** argv) {
       return 0;
   }
   //接收客户端发来的数据
-  while((n=recv(client_fd,buff,100,0))>0)
+  while(1)
   {
+    if((n=recv(client_fd,buff,100,0))>0){
       buff[n]=='\0';
       command[n]='\0';
       strncpy(command,buff,n);
@@ -116,7 +116,7 @@ int main(int argc, char** argv) {
         }
       else if(strncmp(command,"quit",4)==0)
           break;
-     
+    }
   }
     
 
