@@ -16,6 +16,7 @@ int main(int argc, char** argv) {
   int client_fd;
   struct sockaddr_in client_add;
   char buff[101];
+  char command[101];
   socklen_t len;
   int n;
 
@@ -35,7 +36,13 @@ int main(int argc, char** argv) {
   // Obtain Control Authority
   vehicle->obtainCtrlAuthority(functionTimeout);
   
-  
+  // get gps information
+  while(1){
+  Telemetry::GPSInfo gpsData;
+  gpsData = vehicle->broadcast->getGPSInfo();
+  std::cout << "latitude=" << gpsData.latitude << std::endl;
+  std::cout << "longtitude=" << gpsData.longitude << std::endl;
+  }
   // open server
   // 创建socket连接
   sock_fd=socket(AF_INET,SOCK_STREAM,0);
@@ -93,26 +100,27 @@ int main(int argc, char** argv) {
   while((n=recv(client_fd,buff,100,0))>0)
   {
       buff[n]=='\0';
-      
-      std::cout << "strcmp =" << strncmp(buff,"takeoff",7) << std::endl;
-      if (strncmp(buff,"takeoff",7)==0){
-        TakeoffAnyway(vehicle);
-        close(client_fd);
-        close(sock_fd);
-        return 0;
-      }
-      printf("receive byetes = %d data=%s\n",n,buff);
+      command[n]='\0';
+      strncpy(command,buff,n);
+      printf("receive byetes = %d data=%s\n",n,command);
       fflush(stdout);
-      send(client_fd,buff,n,0);
-      if(strncmp(buff,"quit",4)==0)
-      {
-          break;
+      send(client_fd,command,n,0);
+      if(strncmp(command,"Take Off",8)==0){
+        TakeoffAnyway(vehicle);
       }
+      else if(strncmp(command,"land",4)==0){
+        LandingAnyway(vehicle);
+      }
+      else if(strncmp(command,"forward",7)==0){
+          moveByPositionOffset(vehicle,5,0,0,0);
+        }
+      else if(strncmp(command,"quit",4)==0)
+          break;
+     
   }
     
 
-  std::cout << "Automatic takeoff and landing test for VE450 starts..."
-          <<std::endl;
+  std::cout << "Automatic takeoff and landing test for VE450 starts..." << std::endl;
   /*TakeoffAnyway(vehicle);
   moveByPositionOffset(vehicle,0,0,0,0);
   moveByPositionOffset(vehicle,0,0,0,0);
