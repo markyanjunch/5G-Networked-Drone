@@ -121,6 +121,18 @@ int main(int argc, char** argv) {
       else if(strncmp(command,"quit",4)==0)
           break;
     }
+    //断线重连
+    else{
+      try
+      {
+       client_fd.sendUrgentData(0xFF); 
+      }
+      catch(Exception e)
+      {
+        //reconnect()
+      }
+        
+    }
   }
     
 
