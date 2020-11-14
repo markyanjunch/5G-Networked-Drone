@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "VE450.hpp"
+#include <errno.h>
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -63,7 +64,7 @@ int main(int argc, char** argv) {
   serv_addr.sin_addr.s_addr=htons(INADDR_ANY);    //设置服务器IP地址
   bzero(&(serv_addr.sin_zero),8);
   
-  //允许端口复用
+  //reuseaddr
   setsockopt(sock_fd,SOL_SOCKET,SO_REUSEADDR,&reuse,sizeof(reuse));
   
   //绑定端口
@@ -102,15 +103,24 @@ int main(int argc, char** argv) {
   //接收客户端发来的数据
   while(1)
   {
-    if((n=recv(client_fd,buff,100,0))>0){
+    
+      n=recv(client_fd,buff,100,0);
+      if(n<=0){
+        fflush(stdout);
+        std::cout<<"disconnected, reconnecting"<<std::endl;
+        sleep(10);
+        client_fd=accept(sock_fd,(struct sockaddr*)&client_add,&len);
+      }
+    else{
       buff[n]=='\0';
       command[n]='\0';
       strncpy(command,buff,n);
-      printf("receive byetes = %d data=%s\n",n,command);
+      printf("receive bytes = %d data=%s\n",n,command);
       fflush(stdout);
       send(client_fd,command,n,0);
       if(strncmp(command,"Take Off",8)==0){
         TakeoffAnyway(vehicle);
+      
       }
       else if(strncmp(command,"land",4)==0){
         LandingAnyway(vehicle);
@@ -121,18 +131,8 @@ int main(int argc, char** argv) {
       else if(strncmp(command,"quit",4)==0)
           break;
     }
-    //断线重连
-    else{
-      try
-      {
-       client_fd.sendUrgentData(0xFF); 
-      }
-      catch(Exception e)
-      {
-        //reconnect()
-      }
-        
-    }
+    
+    
   }
     
 
