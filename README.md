@@ -37,4 +37,5 @@ http://www.secflag.com/archives/373.html
 + 端口冲突解决方法  
 https://www.cnblogs.com/ezhar/p/13461839.html  
 + 多线程  
-https://blog.csdn.net/weixin_40547071/article/details/88554182
+https://blog.csdn.net/weixin_40547071/article/details/88554182  
+（安卓）https://blog.csdn.net/fukaimei/article/details/78158258
