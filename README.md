@@ -38,4 +38,5 @@ http://www.secflag.com/archives/373.html
 https://www.cnblogs.com/ezhar/p/13461839.html  
 + 多线程  
 https://blog.csdn.net/weixin_40547071/article/details/88554182  
+https://www.cnblogs.com/liangf27/p/9356837.html  
 （安卓）https://blog.csdn.net/fukaimei/article/details/78158258
