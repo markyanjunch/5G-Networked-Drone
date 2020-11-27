@@ -91,11 +91,9 @@ int main(int argc, char** argv) {
   {
       printf("Success to listen\n");
   }
-
-  while(1){
   len=sizeof(client_add);
   client_fd=accept(sock_fd,(struct sockaddr*)&client_add,&len);
-  }
+  
 
   if(client_fd<=0)
   {
