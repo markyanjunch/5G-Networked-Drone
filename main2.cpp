@@ -7,13 +7,14 @@
 #include "VE450.hpp"
 #include <errno.h>
 #include <pthread.h>
-#include<time.h>
+#include  <time.h>
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 #define MAXLINE 101
 pthread_mutex_t g_mutext;
   // get gps information
 Telemetry::GPSInfo gpsData;
+Telemetry::Battery batteryInfo;
   
 struct s_info{
   struct sockaddr_in client_add;
@@ -23,37 +24,27 @@ struct s_info{
 };
 
 void* do_work(void* arg){
+    //在创建线程前设置线程创建属性,设为分离态,效率高
+  pthread_detach(pthread_self());
   int n,i;
   int reno=0;
 	struct s_info *ts = (struct s_info*)arg;
 	char buf[MAXLINE];//在线程自己的用户空间栈开辟的,该线程运行结束的时候,主控线程就不能操作这块内存了
 	char str[INET_ADDRSTRLEN];//INET_ADDRSTRLEN 是宏16个字节
-  memset(buf,0,sizeof(buf));
-  char info[50]="thread access established, thread no. \0";
+  char info[17]="Thread No.\0";
   char thnum[5];
   thnum[5]='\0';
-  char la_origin[32];
-  char lo_origin[32];
-  char la_trivial[7];
-  char lo_trivial[7];
   char la[10];
-  char lo[11];
-  la_origin[32]='\0';
-  lo_origin[32]='\0';
-  la_trivial[7]='\0';
-  lo_trivial[7]='\0';
+  char lo[10];
   la[10]='\0';
-  lo[11]='\0';
-  char dot[]={"."};
-  char dest[21];
-  dest[21]='\0';
-  char space[]={" "};
+  lo[10]='\0';
+  char dymsg[19];
+  int battery;
+  char ba[2];
+  ba[2]='\0';
   sprintf(thnum,"%d", ts->thno);
-  //在创建线程前设置线程创建属性,设为分离态,效率高
-  pthread_detach(pthread_self());
-  
-  send(ts->client_fd,strcat(info,thnum),55,0);
- std::cout<<info<<std::endl;
+  printf("%s\n",strcat(info,thnum));
+  send(ts->client_fd,info,17,0);
   /*
   recv(ts->client_fd,buf,MAXLINE,0);
   if(strncmp(buf,"commandmode",11)==0){
@@ -66,7 +57,7 @@ void* do_work(void* arg){
         std::cout<<"disconnected, reconnecting"<<std::endl;
         sleep(4);
         reno++;
-        if(reno>=5)break;
+        if(reno>=4)break;
       }
       else{
       buf[MAXLINE]=='\0';
@@ -74,34 +65,42 @@ void* do_work(void* arg){
       fflush(stdout);
       send(ts->client_fd,buf,n,0);
       if(strncmp(buf,"gps",3)==0){
-        srand(1);
         send(ts->client_fd,"enter gps mode",15,MSG_NOSIGNAL);
         while(1){
+          
+          gpsData = ts->vehicle->broadcast->getGPSInfo();
+          batteryInfo = ts->vehicle->broadcast->getBatteryInfo();
+          battery=(int)batteryInfo.percentage;
+         
+          
           sleep(1);
-          /*
-          sprintf(la_origin,"%d",gpsData.latitude);
-          sprintf(lo_origin,"%d",gpsData.longitude);
-          printf("gps info %d %d",gpsData.latitude,gpsData.longitude);
-          fflush(stdout);
-          strncpy(la,la_origin,2);
-          strncpy(lo,lo_origin,3);
-          strncat(la,dot,1);
-          strncat(lo,dot,1);
-          strncpy(dest,la,9);
-          strncat(dest,space,1);
-          strncat(dest,lo,10);
-          for(int u=1;u<=6;u++){
-            la_trivial[u]=la_origin[u+2];
-            lo_trivial[u]=lo_origin[u+3];
+          sprintf(la,"%d",gpsData.latitude);
+          sprintf(lo,"%d",gpsData.longitude);
+          strcat(dymsg,la);
+          strcat(dymsg,lo);
+          
+          if ((battery>=10)&&(battery<100))
+          {
+           sprintf(ba,"%d",battery);
+            strcat(dymsg,ba);
           }
-          strncat(la,la_trivial,6);
-          strncat(lo,lo_trivial,6);
+          /*
+          else if(battery<10)
+          {
+            ba[1]=0;
+            ba[2]=0;
+            ba[3]=(char)battery;
+            strcat(dymsg,ba);
+          }
+          else{
+            strcat(dymsg,"100");
+          }
           */
-         int randnum=rand()%100;
-          if(send(ts->client_fd,(const char*)&randnum,4,MSG_NOSIGNAL)<=0){
+          if(send(ts->client_fd,dymsg,21,MSG_NOSIGNAL)<=0){
             printf("thread %d is closing...",ts->thno);
             fflush(stdout);
             pthread_exit(NULL);
+            sleep(0.5);
           }
         }
       }
@@ -117,14 +116,14 @@ void* do_work(void* arg){
       else if(strncmp(buf,"quit",4)==0)
           break;
      }
-     memset(buf,0,sizeof(buf));
+    
   }
   /*
   }
   
   else if(strncmp(buf,"recvmode",8)==0){
     send(ts->client_fd,"Enter recv mode",15,0);
-      gpsData = ts->vehicle->broadcast->getGPSInfo();
+      
   }
   */
 pthread_exit(NULL);
