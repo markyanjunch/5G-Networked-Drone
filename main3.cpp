@@ -9,7 +9,8 @@
 #include <pthread.h>
 #include  <time.h>
 #include <netinet/tcp.h>
-#include<math.h>
+#include <math.h>
+#include <cmath>
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 #define MAXLINE 101
@@ -62,7 +63,7 @@ void* do_work(void* arg){
         std::cout<<"disconnected, reconnecting"<<std::endl;
         sleep(4);
         reno++;
-        if(reno>=4)break;
+        if(reno>=3)break;
       }
       else{
       buf[MAXLINE]=='\0';
@@ -76,8 +77,8 @@ void* do_work(void* arg){
           memset(buf,0,sizeof(buf));
           memset(dymsg,0,sizeof(dymsg));
           gpsData = ts->vehicle->broadcast->getGPSInfo();
-          //gpsData.latitude = gpsData.latitude-19168;
-          //gpsData.longitude = gpsData.longitude+47615;
+          gpsData.latitude = gpsData.latitude-18426;
+          gpsData.longitude = gpsData.longitude+47135;
           batteryInfo = ts->vehicle->broadcast->getBatteryInfo();
           battery=(int)batteryInfo.percentage;
                  
@@ -104,6 +105,9 @@ void* do_work(void* arg){
             strcat(dymsg,"100");
           }
           */
+         if((gpsData.latitude==-18426)||(gpsData.longitude==47135)){
+          continue; 
+         }
           if(send(ts->client_fd,dymsg,39,MSG_NOSIGNAL)<=0){
             printf("thread %d is closing...",ts->thno);
             fflush(stdout);
@@ -115,27 +119,46 @@ void* do_work(void* arg){
       send(ts->client_fd,buf,n,0);
       if(strncmp(buf,"Take Off",8)==0){
         monitoredTakeoff(ts->vehicle);
+        send(ts->client_fd,"Successfully take off!",23,0);
       }
       else if(strncmp(buf,"land",4)==0){
         monitoredLanding(ts->vehicle);
+        send(ts->client_fd,"Successfully land!",19,0);
       }
       else if(strncmp(buf,"forward",7)==0){
-        moveByPositionOffset(ts->vehicle,5,0,0,0);
+        moveByPositionOffset(ts->vehicle,3,0,0,0);
+        send(ts->client_fd,"Successfully move forward!",27,0);
       }
       else if(strncmp(buf,"backward",8)==0){
-        moveByPositionOffset(ts->vehicle,-5,0,0,0);
+        moveByPositionOffset(ts->vehicle,-3,0,0,0);
+        send(ts->client_fd,"Successfully move backward!",28,0);
       }
       else if(strncmp(buf,"left",4)==0){
-        moveByPositionOffset(ts->vehicle,0,-5,0,0);
+        moveByPositionOffset(ts->vehicle,0,-3,0,0);
+        send(ts->client_fd,"Successfully move left!",24,0);
       }
       else if(strncmp(buf,"right",5)==0){
-        moveByPositionOffset(ts->vehicle,0,5,0,0);
+        moveByPositionOffset(ts->vehicle,0,3,0,0);
+        send(ts->client_fd,"Successfully move right!",25,0);
       }
       else if(strncmp(buf,"upper",5)==0){
-        moveByPositionOffset(ts->vehicle,0,0,0.5,0);
+        moveByPositionOffset(ts->vehicle,0,0,2,0);
+        send(ts->client_fd,"Successfully move up!",22,0);
       }
       else if(strncmp(buf,"lower",5)==0){
-        moveByPositionOffset(ts->vehicle,0,0,-0.5,0);
+        if(ts->vehicle->broadcast->getGlobalPosition().height<2.5){
+          send(ts->client_fd,"Height too low!",16,0);
+        }
+        else{
+        moveByPositionOffset(ts->vehicle,0,0,-1,0);
+        send(ts->client_fd,"Successfully move down!",24,0);
+        }
+      }
+      else if(strncmp(buf,"hotpoint",8)==0){
+        int     hotptInitRadius;
+        int     responseTimeout = 1;
+        hotptInitRadius = 10;
+        runHotpointMission(ts->vehicle, hotptInitRadius, responseTimeout);
       }
       else if(strncmp(buf,"waypoint",8)==0){
         
@@ -144,11 +167,11 @@ void* do_work(void* arg){
         // Global position retrieved via broadcast
         Telemetry::GlobalPosition currentGPS;
         Telemetry::GlobalPosition targetGPS;
-        currentGPS = ts->vehicle->broadcast->getGlobalPosition();
-        gpsData = ts->vehicle->broadcast->getGPSInfo();
-        
-        //currentGPS.latitude = static_cast<double>(gpsData.latitude)/static_cast<double>(10000000.0000000);
-        //currentGPS.longitude = static_cast<double>(gpsData.longitude)/static_cast<double>(10000000.0000000);
+        //currentGPS = ts->vehicle->broadcast->getGlobalPosition();
+        //gpsData = ts->vehicle->broadcast->getGPSInfo();
+
+        currentGPS.latitude = static_cast<double>(gpsData.latitude)/static_cast<double>(10000000.0000000)*DEG2RAD;
+        currentGPS.longitude = static_cast<double>(gpsData.longitude)/static_cast<double>(10000000.0000000)*DEG2RAD;
         std::cout << "gpsData.latitude=" << gpsData.latitude << std::endl;
         
         printf("currentGPS.latitude= %.7lf\n", currentGPS.latitude);
@@ -159,7 +182,7 @@ void* do_work(void* arg){
         std::cout << "buf_str=" << buf_str<< std::endl;
         std::cout << "buf_str_la=" << buf_str_la<< std::endl;
         std::cout << "buf_str_lo=" << buf_str_lo<< std::endl;
-        targetGPS  = {(double)atof(buf_str_la.c_str())*PI/180.0000000, (double)atof(buf_str_lo.c_str())*PI/180.0000000,currentGPS.altitude,currentGPS.height,
+        targetGPS  = {(double)atof(buf_str_la.c_str())*DEG2RAD, (double)atof(buf_str_lo.c_str())*DEG2RAD,currentGPS.altitude,currentGPS.height,
         currentGPS.health};
         //std::cout<<"current:"<<currentGPS.latitude<<" "<<currentGPS.longitude<<std::endl;
         std::cout<<"target:"<<targetGPS.latitude<<" "<<targetGPS.longitude<<std::endl;
@@ -168,7 +191,12 @@ void* do_work(void* arg){
                                 static_cast<void*>(&currentGPS));
         std::cout<<"ready to move"<<std::endl;
         std::cout<<"NED:"<<deltaNED.x<<" "<<deltaNED.y<<std::endl;
-        moveByPositionOffset(ts->vehicle,deltaNED.x,deltaNED.y,0,0);
+        if((deltaNED.x*deltaNED.x)+(deltaNED.y*deltaNED.y)<=625){
+        double x,y;
+        x=-deltaNED.y*1.5;
+        y=deltaNED.x;
+        moveByPositionOffset(ts->vehicle,x,y,0,0);
+      }
       }
       else if(strncmp(buf,"quit",4)==0)
           break;
