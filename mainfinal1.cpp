@@ -225,13 +225,8 @@ int main(int argc, char** argv) {
 
   // Obtain Control Authority
   vehicle->obtainCtrlAuthority(functionTimeout);
-  /*
-
-  std::cout << "latitude=" << gpsData.latitude << std::endl;
-  std::cout << "longtitude=" << gpsData.longitude << std::endl;
-  */
   // open server
-  // 创建socket连接
+  // create the socket
   sock_fd=socket(AF_INET,SOCK_STREAM,0);
   if(sock_fd==-1)
   {
@@ -243,17 +238,17 @@ int main(int argc, char** argv) {
       printf("Success to create socket %d\n",sock_fd);
   }
 
-  //设置server地址结构
-  bzero(&serv_addr,sizeof(serv_addr));    //初始化结构占用内存
-  serv_addr.sin_family=AF_INET;    //设置传输层类型IPv4
-  serv_addr.sin_port=htons(EHCO_PORT);    //设置端口号
-  serv_addr.sin_addr.s_addr=htons(INADDR_ANY);    //设置服务器IP地址
+  //set the address structure of the server
+  bzero(&serv_addr,sizeof(serv_addr));    //initialize the memory
+  serv_addr.sin_family=AF_INET;    //set the transmission layer attribute as IPv4
+  serv_addr.sin_port=htons(EHCO_PORT);    //set the port number
+  serv_addr.sin_addr.s_addr=htons(INADDR_ANY);    //set the IP address of the server
   bzero(&(serv_addr.sin_zero),8);
   
   //reuseaddr
   int reuseaddr=setsockopt(sock_fd,SOL_SOCKET,SO_REUSEADDR,&reuse,sizeof(tv));
   
-  //绑定端口
+  //bind the socket to the port
   if(bind(sock_fd,(struct sockaddr*)&serv_addr,sizeof(serv_addr))!=0)
   {
        printf("bind address fail %d\n",errno);
@@ -265,7 +260,7 @@ int main(int argc, char** argv) {
        printf("Success to bind address!\n");
   }
 
-  //监听端口
+  //listen to the port
   if(listen(sock_fd,MAX_CLIENT_NUM!=0))
   {
       perror("listen socket error!\n");
