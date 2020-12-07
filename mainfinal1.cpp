@@ -26,13 +26,15 @@ struct s_info{
   Vehicle* vehicle;
   int thno;
 };
-
+//This is the thread function
 void* do_work(void* arg){
-    //在创建线程前设置线程创建属性,设为分离态,效率高
+//set the attribute of the thread as detached, which means that 
+//once the thread is ended, its resources are automatically released.
   pthread_detach(pthread_self());
   int n,i;
   int on=1;
   int reno=0;
+	//receive the information
 	struct s_info *ts = (struct s_info*)arg;
 	char buf[MAXLINE];//在线程自己的用户空间栈开辟的,该线程运行结束的时候,主控线程就不能操作这块内存了
 	char str[INET_ADDRSTRLEN];//INET_ADDRSTRLEN 是宏16个字节
@@ -190,6 +192,7 @@ void* do_work(void* arg){
       
   }
   */
+//Exit the thread when the function returns
 pthread_exit(NULL);
 }
 
@@ -214,7 +217,6 @@ int main(int argc, char** argv) {
   std::cout << "VE450 program starts!\n";
   LinuxSetup linuxEnvironment(argc, argv);
   Vehicle* vehicle = linuxEnvironment.getVehicle();
- 
   if (vehicle == NULL) {
     std::cout << "Vehicle not initialized, exiting.\n";
     return -1;
@@ -278,14 +280,13 @@ int main(int argc, char** argv) {
   while(1){
   len=sizeof(client_add);
   client_fd=accept(sock_fd,(struct sockaddr*)&client_add,&len);
-  /*
-  std::cout<<strerror(errno)<<std::endl;
-  */
+  //after accept(), the thread will be created
   ts[m].client_add=client_add;
   ts[m].client_fd=client_fd;
   ts[m].vehicle=vehicle;
   ts[m].thno=m;
-  pthread_create(&tid, NULL, do_work, (void*)&ts[m]);//把accept得到的客户端信息传给线程，让线程去和客户端进行数据的收发
+  //pass the information received by accept() to the thread
+  pthread_create(&tid, NULL, do_work, (void*)&ts[m]);
   m++;
   }
   
