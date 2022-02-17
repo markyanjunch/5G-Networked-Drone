@@ -4,6 +4,9 @@ We are Group 10 from the University of Michigan-Shanghai Jiao Tong University Jo
 ## Project Video
 https://youtu.be/hHcl_DsDYcM
 
+## Poster
+<img src="./Reports/450-Group 10-5G Networked Drone.JPG" alt="" width=75%>
+
 ## Useful Links:
 + 经纬M600 Pro教学:  
 https://www.bilibili.com/video/BV12x411u7D6  
